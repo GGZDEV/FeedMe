@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeedMe</title>
+  <link rel="icon" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="agents.css">
+  <link rel="stylesheet" href="ai-usage.css">
+</head>
+<body>
+
+  <!-- SVG icon sprite -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 17v5"/><path d="M5 17h14"/><path d="M9 2h6l1 7h-8l1-7z"/><path d="M8 9l-3 8h14l-3-8"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><line x1="4" y1="12" x2="20" y2="12"/></symbol>
+    <symbol id="i-max" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></symbol>
+    <symbol id="i-layout" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></symbol>
+    <symbol id="i-panel-right" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></symbol>
+    <symbol id="i-panel-left" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></symbol>
+    <symbol id="i-tablet" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol>
+    <symbol id="i-rss" viewBox="0 0 24 24"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol>
+    <symbol id="i-sync" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 15l.7 1.8L21.5 17.5l-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7L19 15z"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><line x1="9" y1="4" x2="9" y2="20"/><line x1="15" y1="4" x2="15" y2="20"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.5-.67 1.5-1.5 0-.4-.15-.74-.4-1-.24-.26-.4-.61-.4-1 0-.83.67-1.5 1.5-1.5H16c3.3 0 6-2.7 6-6 0-4.97-4.5-9-10-9z"/></symbol>
+    <!-- Dashboard modulaire -->
+    <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-quote" viewBox="0 0 24 24"><path d="M4 6h10"/><path d="M4 11h16"/><path d="M4 16h7"/><path d="M15 16h5"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19a4.5 4.5 0 0 0 .5-8.98 6 6 0 0 0-11.6-1.5A4 4 0 0 0 7 19z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="6"/><line x1="16" y1="3" x2="16" y2="6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9L2.4 17.6A2 2 0 0 0 4.1 20.6h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="i-arrow-up" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></symbol>
+    <symbol id="i-reply" viewBox="0 0 24 24"><polyline points="9 14 4 9 9 4"/><path d="M4 9h10a6 6 0 0 1 6 6v4"/></symbol>
+    <symbol id="i-paperclip" viewBox="0 0 24 24"><path d="M21 11.5l-8.6 8.6a5 5 0 0 1-7.1-7.1l8.6-8.6a3.3 3.3 0 0 1 4.7 4.7l-8.6 8.6a1.7 1.7 0 0 1-2.4-2.4l7.9-7.9"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></symbol>
+    <symbol id="i-check-square" viewBox="0 0 24 24"><polyline points="9 11 12 14 20 6"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></symbol>
+  </svg>
+
+  <div class="side-peek" aria-hidden="true">
+    <div class="side-peek-inner">
+      <span class="side-peek-arrow">&#10095;</span>
+      <span>FeedMe</span>
+    </div>
+  </div>
+
+  <!-- Barre de titre (Electron uniquement) -->
+  <div class="titlebar">
+    <div class="titlebar-spacer"></div>
+
+    <button class="tb-btn pin-btn" id="btn-pin" onclick="togglePin()" title="Toujours au premier plan">
+      <svg class="ic"><use href="#i-pin"/></svg>
+    </button>
+    <button class="tb-btn" id="btn-dock" onclick="toggleDockMenu()" title="Disposition">
+      <svg class="ic"><use href="#i-layout"/></svg>
+    </button>
+
+    <div class="dock-menu" id="dock-menu">
+      <button onclick="dockRight()"><svg class="ic"><use href="#i-panel-right"/></svg> Dock à droite</button>
+      <button onclick="dockLeft()"><svg class="ic"><use href="#i-panel-left"/></svg> Dock à gauche</button>
+      <button onclick="tabletMode()"><svg class="ic"><use href="#i-tablet"/></svg> Mode tablette</button>
+      <div class="dock-menu-sep"></div>
+      <button onclick="toggleReserveSpace()" id="btn-reserve"><svg class="ic"><use href="#i-pin"/></svg> <span id="reserve-label">Ancrer au bureau</span></button>
+      <button onclick="toggleAutoHide()" id="btn-autohide"><svg class="ic"><use href="#i-eye-off"/></svg> <span id="autohide-label">Activer auto-masquer</span></button>
+    </div>
+
+    <div class="tb-sep"></div>
+
+    <button class="tb-btn" onclick="minimizeWin()" title="Minimiser"><svg class="ic ic-sm"><use href="#i-minus"/></svg></button>
+    <button class="tb-btn" onclick="maximizeWin()" title="Maximiser"><svg class="ic ic-sm"><use href="#i-max"/></svg></button>
+    <button class="tb-btn close-btn" onclick="closeWin()" title="Fermer"><svg class="ic ic-sm"><use href="#i-x"/></svg></button>
+  </div>
+
+  <!-- En-tête -->
+  <header>
+    <div class="top-row">
+      <div class="header-id">
+        <h1 class="brand" aria-label="FeedMe">feed<span class="brand-dot" aria-hidden="true"></span>me</h1>
+        <div class="status mono">
+          <span id="status-text">Chargement…</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="refresh()" title="Rafraîchir" id="btn-refresh"><svg class="ic"><use href="#i-refresh"/></svg></button>
+        <button class="icon-btn" onclick="openWidgetLibrary()" title="Ajouter un widget"><svg class="ic"><use href="#i-grid"/></svg></button>
+        <button class="icon-btn" onclick="togglePanel('settings')" title="Paramètres"><svg class="ic"><use href="#i-settings"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard : la colonne de widgets -->
+  <nav class="workspace-tabs" aria-label="Espaces FeedMe">
+    <button type="button" class="active" data-workspace="dashboard">Mon bureau</button>
+    <button type="button" data-workspace="agents"><svg class="ic"><use href="#i-sparkle"/></svg> Agents <span class="inbox-badge" data-inbox-badge hidden></span></button>
+  </nav>
+  <main class="dashboard" id="dashboard"></main>
+  <main id="agent-space" class="agent-space" hidden></main>
+
+  <!-- Bibliothèque de widgets -->
+  <div class="sheet-overlay" id="library-panel" onclick="closePanelIfBg(event, 'library-panel')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <header class="sheet-head">
+        <h2>Widgets</h2>
+        <button class="ghost-btn" onclick="closeWidgetLibrary()" title="Fermer"><svg class="ic"><use href="#i-x"/></svg></button>
+      </header>
+      <p class="section-hint">Composez votre dashboard. Sur le tableau, glissez un widget par sa poignée pour le déplacer, double-cliquez son en-tête pour le replier sur une ligne.</p>
+      <div id="library-list" class="library-list"></div>
+      <div class="btn-row">
+        <button class="btn danger" onclick="confirmClick(this, 'resetDashboard')"><svg class="ic ic-sm"><use href="#i-sync"/></svg> Réinitialiser la disposition</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Détail d'un board -->
+  <div class="sheet-overlay" id="board-panel" onclick="closePanelIfBg(event, 'board-panel')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <header class="sheet-head">
+        <h2 id="board-sheet-title">Board</h2>
+        <button class="ghost-btn" onclick="closeBoardSheet()" title="Fermer"><svg class="ic"><use href="#i-x"/></svg></button>
+      </header>
+      <div id="board-sheet-body"></div>
+    </div>
+  </div>
+
+  <!-- Panneau Paramètres -->
+  <div class="sheet-overlay" id="settings-panel" onclick="closePanelIfBg(event, 'settings-panel')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <header class="sheet-head">
+        <h2>Paramètres</h2>
+        <button class="ghost-btn" onclick="togglePanel('settings')" title="Fermer"><svg class="ic"><use href="#i-x"/></svg></button>
+      </header>
+
+      <nav class="settings-tabs">
+        <button class="settings-tab active" data-settings-tab="sources" onclick="showSettingsSection('sources')"><svg class="ic ic-sm"><use href="#i-rss"/></svg> Sources</button>
+        <button class="settings-tab" data-settings-tab="categories" onclick="showSettingsSection('categories')"><svg class="ic ic-sm"><use href="#i-palette"/></svg> Catégories</button>
+        <button class="settings-tab" data-settings-tab="feedly" onclick="showSettingsSection('feedly')"><svg class="ic ic-sm"><use href="#i-sync"/></svg> Feedly</button>
+        <button class="settings-tab" data-settings-tab="spotify" onclick="showSettingsSection('spotify')"><svg class="ic ic-sm"><use href="#i-music"/></svg> Spotify</button>
+        <button class="settings-tab" data-settings-tab="ai" onclick="showSettingsSection('ai')"><svg class="ic ic-sm"><use href="#i-sparkle"/></svg> IA</button>
+        <button class="settings-tab" data-settings-tab="ai-usage" onclick="showSettingsSection('ai-usage')"><svg class="ic ic-sm"><use href="#i-sparkle"/></svg> Abonnements IA</button>
+        <button class="settings-tab" data-settings-tab="suggestions" onclick="showSettingsSection('suggestions')"><svg class="ic ic-sm"><use href="#i-sparkle"/></svg> Recommandations</button>
+      </nav>
+
+      <section class="settings-section active" id="settings-section-sources">
+        <form class="source-add" onsubmit="addFeed(event)">
+          <label class="field">
+            <svg class="ic"><use href="#i-rss"/></svg>
+            <input type="url" id="new-url" placeholder="Coller l’URL d’un flux ou d’un site" aria-label="Ajouter un flux" required>
+          </label>
+          <select id="new-cat" class="field-select" title="Catégorie du nouveau flux" aria-label="Catégorie du nouveau flux"></select>
+          <button type="submit" class="btn primary">Ajouter</button>
+        </form>
+        <div class="source-meta mono"><span id="feed-count">—</span><span>tri : catégorie</span></div>
+        <div id="feed-list" class="source-list"></div>
+      </section>
+
+      <section class="settings-section" id="settings-section-categories">
+        <div class="set-card">
+          <div class="set-card-head">
+            <span class="set-card-icon"><svg class="ic ic-sm"><use href="#i-palette"/></svg></span>
+            <div class="set-card-titles">
+              <div class="set-card-title">Catégories</div>
+              <div class="set-card-sub">Regroupent vos flux et colorent les badges</div>
+            </div>
+          </div>
+          <div id="cat-list" class="list set-list"></div>
+          <form class="set-foot" onsubmit="addCategory(event)">
+            <input type="text" id="new-cat-name" placeholder="Nom de la catégorie…" required>
+            <input type="color" id="new-cat-color" value="#60a5fa" class="color-input" title="Couleur">
+            <button type="submit" class="btn primary icon-only" title="Créer la catégorie"><svg class="ic"><use href="#i-plus"/></svg></button>
+          </form>
+        </div>
+      </section>
+
+      <section class="settings-section" id="settings-section-feedly">
+        <div class="set-card">
+          <div class="set-card-head">
+            <span class="set-card-icon"><svg class="ic ic-sm"><use href="#i-upload"/></svg></span>
+            <div class="set-card-titles">
+              <div class="set-card-title" id="feedly-title">Import OPML</div>
+              <div class="set-card-sub" id="feedly-meta">Compatible avec les comptes Feedly gratuits</div>
+            </div>
+            <span class="set-pill on" id="feedly-badge">OPML</span>
+          </div>
+
+          <div class="set-steps">
+            <div class="set-step"><span class="set-step-num">1</span><span>Sur Feedly web, ouvrez <strong>feedly.com/i/opml</strong>.</span></div>
+            <div class="set-step"><span class="set-step-num">2</span><span>Téléchargez le fichier de vos sources.</span></div>
+            <div class="set-step"><span class="set-step-num">3</span><span>Importez-le ici : les dossiers deviennent des catégories.</span></div>
+          </div>
+
+          <div class="set-row stack">
+            <label class="file-drop">
+              <input type="file" id="feedly-opml" accept=".opml,.xml,text/xml,application/xml" onchange="updateFileLabel(this)" hidden>
+              <svg class="ic"><use href="#i-upload"/></svg>
+              <span class="file-label">Choisir un fichier OPML…</span>
+            </label>
+          </div>
+
+          <div class="set-actions">
+            <button class="btn primary" onclick="importFeedlyOpml()" id="feedly-import-btn"><svg class="ic ic-sm"><use href="#i-upload"/></svg> Importer</button>
+            <button class="btn" onclick="syncFeedly()" id="feedly-sync-btn" title="Réservé aux comptes avec accès API Feedly"><svg class="ic ic-sm"><use href="#i-sync"/></svg> Sync API</button>
+            <button class="btn danger" onclick="disconnectFeedly()" id="feedly-disconnect-btn" title="Retire les flux importés via l'API Feedly"><svg class="ic ic-sm"><use href="#i-power"/></svg> Déconnecter</button>
+          </div>
+        </div>
+
+        <div class="set-card">
+          <div class="set-card-head">
+            <span class="set-card-icon"><svg class="ic ic-sm"><use href="#i-sync"/></svg></span>
+            <div class="set-card-titles">
+              <div class="set-card-title">Connexion API</div>
+              <div class="set-card-sub">Optionnel — comptes Feedly Pro</div>
+            </div>
+          </div>
+          <div class="set-row stack">
+            <span class="set-label">
+              <span class="set-label-text">Jeton d'accès</span>
+              <span class="set-hint">Synchronise vos flux automatiquement, au lieu d'un import manuel.</span>
+            </span>
+            <form class="set-inline" onsubmit="connectFeedly(event)">
+              <input type="password" id="feedly-token" placeholder="Jeton d'accès Feedly…" autocomplete="off">
+              <button type="submit" class="btn primary">Connecter</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-section" id="settings-section-spotify">
+        <div class="set-card">
+          <div class="set-card-head">
+            <span class="set-card-icon"><svg class="ic ic-sm"><use href="#i-music"/></svg></span>
+            <div class="set-card-titles">
+              <div class="set-card-title" id="spotify-title">Spotify non connecté</div>
+              <div class="set-card-sub" id="spotify-meta">Pilotez la lecture depuis FeedMe</div>
+            </div>
+            <span class="set-pill" id="spotify-badge">Hors ligne</span>
+          </div>
+
+          <p class="set-status">
+            <svg class="ic ic-sm"><use href="#i-monitor"/></svg>
+            <span>Le son sort de l'application Spotify de votre PC, les contrôles sont ici. Les commandes de lecture nécessitent un compte Premium.</span>
+          </p>
+
+          <!-- App déjà configurée : la reconnexion ne redemande rien. -->
+          <div class="set-actions" id="spotify-reconnect" hidden>
+            <button class="btn primary" onclick="connectSpotify(event)"><svg class="ic ic-sm"><use href="#i-music"/></svg> Se connecter à Spotify</button>
+          </div>
+          <p class="set-status" id="spotify-setup-toggle" hidden>
+            <svg class="ic ic-sm"><use href="#i-settings"/></svg>
+            <span><a href="#" onclick="toggleSpotifySetup(event)">Utiliser une autre app Spotify…</a></span>
+          </p>
+
+          <div id="spotify-setup">
+            <div class="set-steps">
+              <div class="set-step"><span class="set-step-num">1</span><span>Ouvrez le <a href="#" onclick="openSpotifyDashboard(event)">tableau de bord développeur Spotify</a>, puis <strong>Create app</strong>.</span></div>
+              <div class="set-step"><span class="set-step-num">2</span><span>Collez cette <strong>Redirect URI</strong> exacte dans l'app :</span></div>
+            </div>
+
+            <div class="set-row stack">
+              <div class="copy-field">
+                <code id="spotify-redirect">http://127.0.0.1:3777/api/spotify/callback</code>
+                <button class="btn icon-only" onclick="copyRedirectUri()" title="Copier"><svg class="ic ic-sm"><use href="#i-copy"/></svg></button>
+              </div>
+            </div>
+
+            <div class="set-steps">
+              <div class="set-step"><span class="set-step-num">3</span><span>Cochez <strong>Web API</strong>, enregistrez, puis copiez le <strong>Client ID</strong>.</span></div>
+            </div>
+
+            <div class="set-row stack">
+              <form class="set-inline" onsubmit="connectSpotify(event)">
+                <input type="text" id="spotify-client-id" placeholder="Client ID Spotify…" autocomplete="off" spellcheck="false">
+                <button type="submit" class="btn primary" id="spotify-connect-btn">Connecter</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="set-actions">
+            <button class="btn danger" onclick="disconnectSpotify()" id="spotify-disconnect-btn"><svg class="ic ic-sm"><use href="#i-power"/></svg> Déconnecter</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-section" id="settings-section-ai-usage">
+        <div class="set-card">
+          <h3>Consommation IA</h3>
+          <p class="set-hint">Connectez vos abonnements directement depuis les connexions Codex et Claude Code sur ce PC, ou utilisez votre passerelle OpenClaw. Les identifiants restent dans leur stockage d’origine.</p>
+          <div id="usage-settings-sources"></div>
+          <label for="usage-connection">Source des quotas</label>
+          <div class="usage-connect-row"><select id="usage-connection" aria-label="Source des quotas"></select><button class="btn" id="usage-discover" onclick="discoverUsage()">Rechercher les abonnements</button></div>
+          <p class="set-hint">Connexion directe : connectez-vous une fois à Codex avec ChatGPT et à Claude Code avec Claude, puis recherchez vos abonnements ici. Claude utilise une interface d’utilisation non publique, dont la disponibilité peut varier.</p>
+          <div id="usage-discovery" aria-live="polite"></div>
+          <p class="set-hint">Seuls les quotas communiqués par le fournisseur sont affichés. Une clé API seule ne donne généralement pas accès aux limites de votre abonnement personnel.</p>
+        </div>
+      </section>
+
+      <section class="settings-section" id="settings-section-ai">
+        <div class="set-card">
+          <div class="set-card-head">
+            <span class="set-card-icon"><svg class="ic ic-sm"><use href="#i-sparkle"/></svg></span>
+            <div class="set-card-titles">
+              <div class="set-card-title" id="ai-title">Mode extractif</div>
+              <div class="set-card-sub" id="ai-meta">Résumé extractif et regroupement lexical.</div>
+            </div>
+            <span class="set-pill" id="ai-badge">Hors ligne</span>
+          </div>
+
+          <div class="set-row">
+            <span class="set-label">
+              <span class="set-label-text">Moteur de résumé</span>
+              <span class="set-hint">Deux lignes par article, mises en cache : un article n'est jamais résumé deux fois.</span>
+            </span>
+            <span class="set-control">
+              <select id="ai-provider" onchange="setAiProvider(this.value)">
+                <option value="none">Aucun</option>
+                <option value="compat">Palier gratuit</option>
+                <option value="claude">Claude</option>
+              </select>
+            </span>
+          </div>
+
+          <!-- ── Moteur gratuit : n'importe quelle API compatible OpenAI ── -->
+          <div id="ai-compat" hidden>
+            <div class="set-row">
+              <span class="set-label">
+                <span class="set-label-text">Fournisseur</span>
+                <span class="set-hint" id="ai-compat-note"></span>
+              </span>
+              <span class="set-control">
+                <select id="ai-compat-preset" onchange="setAiCompatPreset(this.value)"></select>
+              </span>
+            </div>
+
+            <div class="set-row stack">
+              <span class="set-label">
+                <span class="set-label-text">Clé API</span>
+                <span class="set-hint" id="ai-compat-keyhint">Vérifiée avant enregistrement.</span>
+              </span>
+              <form class="set-inline" onsubmit="saveAiCompat(event)">
+                <input type="password" id="ai-compat-key" placeholder="Collez la clé…" autocomplete="off" spellcheck="false">
+                <button type="submit" class="btn primary" id="ai-compat-test">Tester</button>
+              </form>
+            </div>
+
+            <div class="set-row">
+              <span class="set-label">
+                <span class="set-label-text">Modèle</span>
+                <span class="set-hint">Le regroupement de sujets reste lexical avec un petit modèle.</span>
+              </span>
+              <span class="set-control">
+                <select id="ai-compat-model" onchange="setAiCompatModel(this.value)"></select>
+              </span>
+            </div>
+
+            <p class="set-status" id="ai-compat-checked-row">
+              <svg class="ic ic-sm"><use href="#i-clock"/></svg>
+              <span id="ai-compat-checked"></span>
+            </p>
+          </div>
+
+          <!-- ── Moteur Claude ── -->
+          <div id="ai-claude" hidden>
+            <div class="set-row stack">
+              <span class="set-label">
+                <span class="set-label-text">Clé Anthropic</span>
+                <span class="set-hint">
+                  Stockée en clair dans <code>ai.json</code>, jamais renvoyée à l'interface.
+                  <a href="#" onclick="openAnthropicConsole(event)">Créer une clé →</a>
+                </span>
+              </span>
+              <form class="set-inline" onsubmit="saveAiKey(event)">
+                <input type="password" id="ai-key" placeholder="sk-ant-…" autocomplete="off" spellcheck="false">
+                <button type="submit" class="btn primary">Enregistrer</button>
+              </form>
+            </div>
+
+            <div class="set-row">
+              <span class="set-label">
+                <span class="set-label-text">Modèle</span>
+                <span class="set-hint">Regroupement sémantique des sujets inclus.</span>
+              </span>
+              <span class="set-control">
+                <select id="ai-model" onchange="setAiModel(this.value)"></select>
+              </span>
+            </div>
+          </div>
+
+          <div class="set-row">
+            <span class="set-label">
+              <span class="set-label-text">Activer les appels</span>
+              <span class="set-hint">Coupe le moteur sans effacer sa configuration.</span>
+            </span>
+            <input type="checkbox" id="ai-enabled" class="switch" onchange="setAiEnabled(this.checked)">
+          </div>
+
+          <p class="set-status" id="ai-status" hidden></p>
+
+          <div class="set-actions">
+            <button class="btn" onclick="clearAiCache()"><svg class="ic ic-sm"><use href="#i-trash"/></svg> Vider le cache</button>
+            <button class="btn danger" onclick="disconnectAi()" id="ai-disconnect-btn"><svg class="ic ic-sm"><use href="#i-power"/></svg> Supprimer la clé</button>
+          </div>
+        </div>
+
+        <div class="set-card">
+          <div class="set-card-head">
+            <span class="set-card-icon"><svg class="ic ic-sm"><use href="#i-eye-off"/></svg></span>
+            <div class="set-card-titles">
+              <div class="set-card-title">Sources masquées</div>
+              <div class="set-card-sub">Retirées du fil, mais toujours configurées</div>
+            </div>
+          </div>
+          <div id="hidden-list" class="list set-list"></div>
+        </div>
+      </section>
+
+      <section class="settings-section" id="settings-section-suggestions">
+        <div class="set-card">
+          <div class="set-card-head">
+            <span class="set-card-icon"><svg class="ic ic-sm"><use href="#i-sparkle"/></svg></span>
+            <div class="set-card-titles">
+              <div class="set-card-title">Recommandations</div>
+              <div class="set-card-sub">Basées sur les flux que vous suivez déjà</div>
+            </div>
+          </div>
+          <div id="suggested-feed-list" class="list set-list"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Modale de sauvegarde -->
+  <div class="modal-overlay" id="save-modal" onclick="closeModalIfBg(event)">
+    <div class="modal">
+      <header class="modal-head">
+        <h3><svg class="ic"><use href="#i-bookmark"/></svg> Sauvegarder l'article</h3>
+        <button class="ghost-btn" onclick="closeSaveModal()"><svg class="ic"><use href="#i-x"/></svg></button>
+      </header>
+
+      <input type="hidden" id="save-article-id">
+      <input type="hidden" id="save-article-title">
+      <input type="hidden" id="save-article-link">
+      <input type="hidden" id="save-article-source">
+
+      <p class="modal-article-title" id="save-modal-title"></p>
+
+      <label for="save-board">Board</label>
+      <select id="save-board"></select>
+
+      <label for="save-highlight">Extrait marquant</label>
+      <textarea id="save-highlight" placeholder="Copiez un passage intéressant…"></textarea>
+
+      <label for="save-note">Note personnelle</label>
+      <textarea id="save-note" placeholder="Vos pensées, idées…"></textarea>
+
+      <div class="modal-actions">
+        <button class="btn" onclick="closeSaveModal()">Annuler</button>
+        <button class="btn primary" onclick="saveToBoard()"><svg class="ic ic-sm"><use href="#i-check"/></svg> Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+  <script src="sparkline.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="ai-usage.js"></script>
+  <script src="widgets/rss.js"></script>
+  <script src="widgets/spotify.js"></script>
+  <script src="widgets/system.js"></script>
+  <script src="widgets/weather.js"></script>
+  <script src="widgets/calendar.js"></script>
+  <script src="widgets/todo.js"></script>
+  <script src="widgets/boards.js"></script>
+  <script src="agents.js"></script>
+</body>
+</html>

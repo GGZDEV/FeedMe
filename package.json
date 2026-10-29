@@ -1,0 +1,62 @@
+{
+  "name": "feedme",
+  "version": "1.0.0",
+  "description": "Assistant desktop et hub pour agents OpenClaw, Hermes et widgets",
+  "main": "electron.js",
+  "scripts": {
+    "start": "node server.js",
+    "widget": "electron .",
+    "dev": "node server.js",
+    "test": "node --test tests/*.test.js",
+    "build": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.feedme.widget",
+    "productName": "FeedMe",
+    "win": {
+      "target": "portable",
+      "icon": "build/icon.ico"
+    },
+    "portable": {
+      "artifactName": "FeedMe.exe"
+    },
+    "files": [
+      "electron.js",
+      "preload.js",
+      "appbar.js",
+      "winmetrics.js",
+      "ai.js",
+      "ai-usage.js",
+      "direct-usage.js",
+      "agents.js",
+      "agent-inbox.js",
+      "agent-contacts.js",
+      "agent-attachments.js",
+      "openclaw.js",
+      "server.js",
+      "public/**/*",
+      "node_modules/**/*",
+      "feeds.json",
+      "spotify-app.json",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "**/*.node",
+      "node_modules/koffi/**",
+      "node_modules/@koromix/**"
+    ],
+    "extraResources": []
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
+    "@xmldom/xmldom": "^0.8.11",
+    "express": "^4.18.2",
+    "koffi": "^3.0.2",
+    "rss-parser": "^3.13.0",
+    "systeminformation": "^5.31.7"
+  },
+  "devDependencies": {
+    "electron": "^41.0.2",
+    "electron-builder": "^26.8.1"
+  }
+}

@@ -1,0 +1,17 @@
+node_modules/
+dist/
+coverage/
+.claude/
+.env
+.env.*
+!.env.example
+*.log
+*.pem
+*.key
+/data/
+/*.json
+!/package.json
+!/package-lock.json
+!/spotify-app.example.json
+.DS_Store
+Thumbs.db
