@@ -1,181 +1,173 @@
-# FeedMe
+<div align="center">
+  <img src="public/icon.png" alt="Logo FeedMe" width="88">
+  <h1>FeedMe</h1>
+  <p><strong>Votre veille, vos widgets et vos agents. Un seul espace sur Windows.</strong></p>
+  <p>Un tableau de bord modulable et une messagerie pour retrouver vos assistants au même endroit.</p>
+  <p>
+    <img alt="Plateforme Windows" src="https://img.shields.io/badge/plateforme-Windows-0078D4?style=flat-square">
+    <img alt="Electron" src="https://img.shields.io/badge/desktop-Electron-47848F?style=flat-square">
+    <img alt="Node.js 22 ou ultérieur" src="https://img.shields.io/badge/Node.js-22%2B-339933?style=flat-square">
+  </p>
+  <p><a href="#aperçu">Aperçu</a> · <a href="#fonctionnalités">Fonctionnalités</a> · <a href="#démarrage-rapide">Démarrage rapide</a> · <a href="#connecter-ses-agents">Connecter ses agents</a></p>
+</div>
 
-Un bureau Windows avec vos widgets et un espace de conversation pour vos agents
-OpenClaw via le protocole WebSocket avec approbation d’appareil, et Hermes ou
-les autres passerelles via leur API compatible Chat Completions.
+## Aperçu
 
-## Utilisation
+<table>
+  <tr>
+    <th width="33%">Votre bureau</th>
+    <th width="33%">Vos agents</th>
+    <th width="33%">Vos widgets</th>
+  </tr>
+  <tr>
+    <td valign="top"><img src="docs/screenshots/dashboard.png" alt="Tableau de bord FeedMe : système, quotas IA, Spotify et flux RSS" width="100%"></td>
+    <td valign="top"><img src="docs/screenshots/agents.png" alt="Messagerie FeedMe avec une liste d’agents anonymisée" width="100%"></td>
+    <td valign="top"><img src="docs/screenshots/widgets.png" alt="Bibliothèque des huit widgets de FeedMe" width="100%"></td>
+  </tr>
+</table>
 
-Ouvrir `dist/FeedMe.exe`, puis l’onglet **Agents**. Ajouter une connexion avec son
-nom, son adresse et son agent / modèle. Pour OpenClaw, saisir le mot de passe
-de la passerelle puis utiliser **Connecter / vérifier**. Pour Hermes ou une API
-compatible, renseigner le jeton puis **Tester**. Ces boutons n’envoient aucune
-tâche à l’agent.
+<sub>Captures de l’application en disposition compacte. La capture Agents a été retouchée pour anonymiser les noms, avatars et messages : les informations affichées sont fictives. Cliquez sur une image pour la voir en grand.</sub>
 
-Une connexion peut avoir plusieurs conversations. Le bouton **+** de la barre
-des conversations démarre un fil indépendant. Les messages et réponses sont
-conservés localement, y compris les réponses partielles en cas d’erreur réseau.
-Les réponses sont affichées en texte brut, sans exécuter du HTML distant.
+## Fonctionnalités
 
-Dans un chat OpenClaw, le sélecteur **Modèle** au-dessus du message affiche les
-modèles de la passerelle. Choisir un modèle puis **Changer** envoie la commande
-native `/model fournisseur/modèle` dans le même fil, avec la confirmation
-d’OpenClaw dans le chat. Cela permet de basculer lorsqu’un modèle atteint sa
-limite, sans perdre l’historique ni le brouillon. **Par défaut de l’agent**
-rétablit sa sélection par défaut ; le bouton **↻** relit la liste.
+### Un bureau à composer
 
-Pour OpenClaw, le menu **Parler à** liste les agents réellement accessibles
-sur la passerelle via `agents.list` : leurs noms et identifiants ne sont pas
-à saisir manuellement. Changer d’agent ouvre un nouveau fil avec cet agent.
-Le menu des conversations affiche les fils du destinataire sélectionné ;
-chaque fil conserve son agent d’origine. Le bouton à côté du sélecteur permet
-de relire le catalogue. Les appels d’outils, résultats d’outils et blocs de
-raisonnement sans texte visible ne créent pas de bulles vides.
+Ajoutez les widgets dont vous avez besoin, déplacez-les par leur poignée et double-cliquez sur leur en-tête pour les replier. Votre disposition est conservée entre les sessions.
 
-## Connecter OpenClaw
+| Widget | Ce que vous retrouvez |
+| --- | --- |
+| **Flux RSS** | Sources personnalisées, import OPML et Feedly, recherche, catégories, favoris, filtres et résumés IA selon la configuration. |
+| **Quotas IA** | Suivi des quotas disponibles et de leur remise à zéro, selon les abonnements et connexions pris en charge. |
+| **Spotify** | Lecture, volume, appareils Connect, favoris, historique et paroles selon leur disponibilité. |
+| **Système** | CPU, RAM, GPU, VRAM, températures, réseau et disque, avec graphiques selon les métriques disponibles. |
+| **Météo** | Conditions actuelles et prévisions, sans clé API. |
+| **Calendrier** | Événements locaux et abonnements ICS. |
+| **To-do** | Tâches à cocher et conservation locale. |
+| **Boards** | Collections d’articles sauvegardés, avec notes et extraits. |
 
-Renseigner votre passerelle, par exemple `wss://openclaw.example.com` (port 443).
-FeedMe se connecte à la passerelle WebSocket ; il n’utilise jamais `/v1` pour
-OpenClaw. L’API HTTP Chat Completions doit rester désactivée sur une passerelle
-exposée publiquement via Tailscale Funnel.
+### Une messagerie pour vos assistants
 
-1. Ouvrir **Agents → Configurer cet agent**, saisir le mot de passe de la
-   passerelle et enregistrer. Agent : `default` ou un identifiant d’agent.
-2. Cliquer sur **Connecter / vérifier**. FeedMe crée et conserve une paire de
-   clés Ed25519 propre à cette installation. Il signe le nonce et l’horodatage
-   du défi `connect.challenge`, puis envoie `connect` avec le mot de passe,
-   l’identité signée, le rôle `operator` et seulement les scopes
-   `operator.read` et `operator.write`.
-3. À la première connexion, FeedMe affiche **Approbation requise** avec son
-   identifiant d’appareil et, lorsqu’il est fourni, l’identifiant de demande.
-   Côté OpenClaw, vérifier l’appareil nommé **FeedMe** et approuver sa demande.
-   La CLI permet aussi de consulter `openclaw devices list`, puis
-   `openclaw devices approve <requestId>`. FeedMe n’approuve pas lui-même
-   l’appareil et ne demande aucun droit d’administration ou d’appairage.
-4. Cliquer de nouveau sur **Connecter / vérifier**. Après l’approbation, le
-   jeton d’appareil est chiffré et mémorisé avec ses droits. Les reconnexions
-   utilisent cette identité et ce jeton, sans repasser le mot de passe.
+- **OpenClaw** via sa passerelle WebSocket, avec approbation de l’appareil.
+- **Hermes** et **API compatibles Chat Completions** via leur adresse et leur jeton.
+- Une liste d’agents avec recherche, aperçus, compteurs de messages non lus et profils personnalisables.
+- Des conversations conservées localement, des pièces jointes et la réception des réponses en continu.
+- Pour OpenClaw, sélection du modèle et récupération des conversations accessibles sur la passerelle.
+- Une application qui reste près de l’horloge Windows lorsque vous fermez sa fenêtre.
 
-Enregistrer un nouveau mot de passe remet la connexion en mode bootstrap
-avec la même identité ; cela ne change aucun réglage ou droit côté serveur.
+Les détails de réception, de synchronisation et les limites connues sont décrits dans [le guide OpenClaw](OPENCLAW-RECEPTION.md).
 
-La discussion utilise `chat.history`, `chat.send` avec une clé d’idempotence
-persistée avant chaque envoi, et `chat.message.get` pour récupérer le dernier
-message complet lorsque la méthode est disponible. Les événements `chat`
-arrivent sur la même connexion. Les remplacements de texte, réponses finales,
-erreurs, coupures et écarts de séquence sont traités explicitement.
-Chaque fil conserve sa clé de session et le `sessionId` retourné par OpenClaw.
-L’actualisation lit l’historique distant ; elle ne renvoie jamais une tâche.
+### Une veille organisée
 
-La connexion implémente les enveloppes communes aux protocoles 3 et 4,
-les signatures d’appareil v3 et les événements texte cumulatifs ou incrémentaux.
-Les demandes d’approbation sont revérifiées sur action de l’utilisateur.
+Classez vos sources par catégorie, choisissez leurs couleurs et retrouvez vos articles depuis le même tableau de bord.
 
-Références officielles : [handshake](https://docs.openclaw.ai/gateway/protocol/handshake),
-[authentification](https://docs.openclaw.ai/gateway/protocol/auth),
-[transport](https://docs.openclaw.ai/gateway/protocol/transport),
-[WebChat](https://docs.openclaw.ai/web/webchat),
-[schémas](https://github.com/openclaw/openclaw/tree/main/packages/gateway-protocol/src/schema).
+<details>
+<summary><strong>Voir les réglages des sources et des catégories</strong></summary>
+<br>
+<table>
+  <tr><th width="50%">Sources RSS</th><th width="50%">Catégories et couleurs</th></tr>
+  <tr>
+    <td valign="top"><img src="docs/screenshots/sources.png" alt="Gestion des sources RSS et de leurs catégories" width="100%"></td>
+    <td valign="top"><img src="docs/screenshots/categories.png" alt="Personnalisation des catégories et de leurs couleurs" width="100%"></td>
+  </tr>
+</table>
+</details>
 
-## Connecter Hermes
+## Démarrage rapide
 
-Sur le serveur, dans `~/.hermes/.env`, activer l’API avec un jeton personnel :
+### Lancer depuis les sources
 
-```dotenv
-API_SERVER_ENABLED=true
-API_SERVER_KEY=<votre-jeton>
-```
-
-Démarrer ou redémarrer `hermes gateway`. L’API écoute habituellement sur
-`127.0.0.1:8642`. L’API est distincte du serveur de l’interface `hermes serve`.
-Dans FeedMe, choisir **Hermes**, renseigner l’adresse et le jeton,
-puis `hermes-agent` comme modèle (ou le nom annoncé par votre profil).
-Les adresses avec préfixe de profil sont acceptées :
-`https://agents.exemple.fr/p/travail/v1`.
-
-FeedMe fournit un identifiant de session par conversation, une clé de mémoire
-par connexion et un identifiant par envoi. L’historique textuel complet est aussi
-transmis pour les versions compatibles qui ne prennent pas ces en-têtes en charge.
-
-[Documentation officielle Hermes](https://hermes-agent.nousresearch.com/docs/user-guide/features/api-server)
-
-## Accès à un VPS
-
-OpenClaw utilise une adresse WSS dont le proxy accepte les connexions WebSocket,
-comme Tailscale Funnel. Hermes utilise HTTPS avec les réponses SSE, de préférence
-sur un accès privé. Un tunnel SSH local est également possible :
+**Prérequis :** Windows, Git et Node.js **22 ou ultérieur** avec npm.
 
 ```sh
-ssh -N -L 18789:127.0.0.1:18789 utilisateur@serveur
-```
-
-Dans FeedMe, adresse `ws://127.0.0.1:18789` pour OpenClaw. Pour Hermes, remplacer les deux
-ports par `8642` et utiliser `http://127.0.0.1:8642`. Les adresses WS/HTTP distantes sont refusées pour éviter de
-transmettre le jeton sans chiffrement. Aucun réglage du VPS n’est modifié
-automatiquement par FeedMe.
-
-## Stockage et limites
-
-La version bureau chiffre mots de passe, clés privées et jetons avec le stockage
-sécurisé Windows. Les secrets ne sont jamais retournés à l’interface, stockés dans
-le navigateur ni journalisés. L’identité Ed25519 et les jetons d’appareil résident
-chiffrés dans `openclaw-device.json`. Les mots de passe et jetons des connexions
-sont chiffrés dans `agents-store.json`. Ces fichiers ne sont pas inclus dans l’exécutable.
-En mode Node seul, OpenClaw requiert la version bureau pour le stockage sécurisé ;
-les nouveaux jetons Hermes restent en mémoire jusqu’à l’arrêt du serveur.
-L’historique local reste lisible dans `agents-store.json` du dossier de données
-FeedMe. En version portable compilée, ce dossier est sous les données utilisateur
-Electron ; en développement, il est dans le projet.
-
-**Arrêter** interrompt la réception ; cela ne garantit pas
-l’arrêt des outils déjà lancés sur le VPS. FeedMe ne renvoie jamais une tâche
-automatiquement après une coupure. Supprimer un fil ou une connexion supprime
-ses données dans FeedMe ; les sessions du serveur restent sur le serveur.
-Cette version crée ses propres sessions API et n’importe pas les anciennes
-conversations Telegram, CLI ou des interfaces natives des agents.
-
-## Développement
-
-Les sources sont fournies sans données personnelles, jetons, caches ni exécutables.
-Les données JSON locales sont créées au premier usage et ignorées par Git.
-Pour Spotify, copier `spotify-app.example.json` vers `spotify-app.json` et renseigner
-votre identifiant client public, ou définir `SPOTIFY_CLIENT_ID`.
-
-Node 22 ou ultérieur. Dépendances existantes :
-
-```sh
+git clone https://github.com/GGZDEV/FeedMe.git
+cd FeedMe
 npm ci
 npm run widget
-npm test
+```
+
+Dans **Mon bureau**, ouvrez la bibliothèque de widgets avec l’icône en grille. Dans **Agents**, utilisez **Nouveau** pour ajouter une connexion.
+
+### Construire la version portable
+
+```sh
 npm run build
 ```
 
-`npm start` lance l’interface dans un serveur local sur le port 3777 (ou le suivant
-disponible). `PORT` et `FEEDME_DATA_DIR` permettent d’isoler une session de test.
-Le serveur est lié uniquement à `127.0.0.1`.
+L’exécutable est créé dans **`dist/FeedMe.exe`**. Fermez toute version en cours d’exécution avant de reconstruire. Les exécutables et les dépendances installées ne sont pas inclus dans le dépôt.
 
-Le module `agents.js` gère stockage, connexions et flux. `openclaw.js` possède
-le coffre d’identité, les signatures et le client WebSocket natif de Node.
-Electron fournit le chiffrement Windows. L’interface est dans `public/agents.js` et `public/agents.css`.
-La navigation conserve les widgets et suspend leurs sondages réguliers quand
-l’espace Agents est visible. Aucun nouveau framework ou SDK n’est ajouté.
+### Ouvrir l’interface dans un navigateur
 
-Les tests utilisent des passerelles simulées : routage, historique, jetons,
-contrôle d’origine, décodage SSE, signatures Ed25519, attente d’approbation,
-persistance chiffrée, reprises de session et absence de renvoi automatique.
-La connexion à vos vrais serveurs nécessite leurs identifiants et, pour
-OpenClaw, l’approbation de l’appareil côté passerelle.
+```sh
+npm start
+```
 
-## Organisation du dossier
+Le serveur écoute sur `127.0.0.1:3777`, ou sur le prochain port disponible. Consultez l’adresse affichée au démarrage. **La version bureau est nécessaire pour le stockage sécurisé utilisé par OpenClaw.**
 
-- `electron.js`, `preload.js`, `appbar.js`, `winmetrics.js` : l’application bureau.
-- `server.js` et ses modules (`agents.js`, `openclaw.js`, `agent-*.js`, `ai*.js`, `direct-usage.js`) : le serveur local.
-- `public/` : l’interface (widgets dans `public/widgets/`).
-- `tests/` : `npm test`.
-- `build/icon.ico` : l’icône de l’exe.
-- Fichiers `*.json` à la racine (`feeds.json`, `boards.json`, `spotify.json`, `agents-store.json`…) :
-  données de la version de développement (`npm start`). L’exe range les siennes dans
-  `%APPDATA%\feedme\FeedMe-data`. `spotify.json` contient un jeton personnel : ne pas partager ce dossier tel quel.
-- `dist/FeedMe.exe` : l’app à lancer, produite par `npm run build`. `dist/win-unpacked`
-  est l’étape intermédiaire du build, recréée à chaque fois. Fermer FeedMe avant de
-  relancer un build, sinon il attend que l’exe soit libéré.
+## Connecter ses agents
+
+| Connexion | Adresse à renseigner | Authentification |
+| --- | --- | --- |
+| **OpenClaw** | `wss://votre-passerelle.example.com` | Mot de passe de la passerelle, puis approbation de FeedMe côté OpenClaw. |
+| **Hermes** | Adresse HTTPS de l’API, par exemple `https://agents.example.com/v1` | Jeton de l’API et modèle disponible, par exemple `hermes-agent`. |
+| **API compatible** | Adresse HTTPS compatible Chat Completions | Jeton et identifiant du modèle du fournisseur. |
+
+### OpenClaw
+
+1. Ajoutez une connexion de type **OpenClaw** dans **Agents**.
+2. Renseignez l’adresse WebSocket et le mot de passe, puis lancez la connexion.
+3. Au premier accès, approuvez l’appareil **FeedMe** sur votre passerelle.
+4. Relancez la vérification dans FeedMe pour terminer la connexion.
+
+FeedMe conserve une identité d’appareil et utilise les droits `operator.read` et `operator.write`. Il ne s’accorde pas de droits d’administration. OpenClaw utilise ici **WebSocket**, sans activer l’API HTTP Chat Completions.
+
+### Hermes et autres API
+
+Activez l’API sur votre serveur, puis renseignez son adresse, son jeton et le modèle dans FeedMe. Les adresses avec un préfixe de profil sont acceptées. Pour un serveur distant, utilisez HTTPS ; HTTP est réservé à une connexion locale, par exemple via un tunnel SSH.
+
+## Configurer les services
+
+- **RSS / Feedly** : ouvrez les paramètres pour ajouter une URL de flux, importer un fichier OPML ou connecter Feedly.
+- **Spotify** : copiez `spotify-app.example.json` vers `spotify-app.json` et renseignez votre identifiant client public. Vous pouvez aussi définir `SPOTIFY_CLIENT_ID`. Connectez ensuite votre compte dans l’interface.
+- **IA** : choisissez votre fournisseur et ses paramètres dans l’onglet IA. Les fonctions disponibles dépendent du fournisseur et du modèle configurés.
+- **Calendrier** : ajoutez vos événements ou l’URL d’un abonnement ICS depuis le widget.
+
+## Données et confidentialité
+
+Les données personnelles ne sont pas fournies avec les sources : chaque installation configure ses connexions et crée ses propres fichiers locaux.
+
+| Mode | Emplacement des données |
+| --- | --- |
+| Développement | Dossier du projet, sauf si `FEEDME_DATA_DIR` est défini. |
+| Application portable compilée | `%APPDATA%\feedme\FeedMe-data` |
+
+Dans la version bureau, les identifiants des agents et leur identité d’appareil sont protégés par le stockage sécurisé Windows. **L’historique des conversations reste lisible dans les fichiers locaux.** Les autres services peuvent également conserver des jetons locaux : ne partagez pas votre dossier de données.
+
+Le `.gitignore` exclut les fichiers JSON locaux, les secrets d’environnement, les caches, `node_modules/` et `dist/`. Seuls les exemples de configuration destinés au dépôt sont versionnés.
+
+> Arrêter la réception dans FeedMe ne garantit pas l’arrêt d’un travail déjà lancé sur un serveur distant. Supprimer une conversation locale ne supprime pas sa session distante.
+
+## Développement
+
+| Commande | Usage |
+| --- | --- |
+| `npm run widget` | Lancer l’application Electron. |
+| `npm start` | Lancer le serveur local et l’interface web. |
+| `npm test` | Exécuter les tests avec des passerelles simulées. |
+| `npm run build` | Produire l’exécutable portable Windows. |
+
+`PORT` permet de choisir le port du serveur ; `FEEDME_DATA_DIR` permet d’isoler les données d’une session.
+
+```text
+FeedMe/
+├── electron.js / preload.js     Application bureau et pont avec l’interface
+├── server.js                   Serveur local et API des widgets
+├── agents.js / openclaw.js      Connexions et conversations des agents
+├── agent-*.js                  Contacts, boîte de réception et pièces jointes
+├── ai*.js / direct-usage.js     Fonctions IA et suivi d’utilisation
+├── public/                     Interface, styles et widgets
+├── tests/                      Tests automatisés
+├── build/                      Icône de l’application
+└── docs/screenshots/           Captures pour la documentation
+```
+
+Un problème ou une idée ? [Ouvrir une issue](https://github.com/GGZDEV/FeedMe/issues).
